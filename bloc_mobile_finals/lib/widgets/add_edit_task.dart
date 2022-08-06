@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-
 import '../blocs/bloc_exports.dart';
 import '../models/task.dart';
 
 class AddEditTask extends StatefulWidget {
   final Task? task;
+  final Task? oldTask;
+  final Task? newTask;
 
   const AddEditTask({
     Key? key,
     this.task,
+    this.oldTask,
+    this.newTask,
   }) : super(key: key);
 
   @override
@@ -89,15 +92,27 @@ class _AddEditTaskState extends State<AddEditTask> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    var task = Task(
-                      title: _title,
-                      description: _description,
-                    );
-                    context.read<TasksBloc>().add(AddTask(task: task));
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Add'),
+                  onPressed: _title.isNotEmpty &&
+                          _description.isNotEmpty &&
+                          widget.task == null
+                      ? () {
+                          var newtask = Task(
+                            title: _title,
+                            description: _description,
+                          );
+                          context.read<TasksBloc>().add(AddTask(task: newtask));
+                          Navigator.pop(context);
+                        }
+                      : () {
+                          var editedTask =
+                              Task(title: _title, description: _description);
+                          context.read<TasksBloc>().add(EditTask(
+                              newTask: editedTask, oldTask: widget.task!));
+                          Navigator.pop(context);
+                        },
+                  child: widget.task == null
+                      ? const Text('Add')
+                      : const Text('Save'),
                 ),
               ],
             ),

@@ -1,52 +1,41 @@
 part of 'tasks_bloc.dart';
 
 class TasksState extends Equatable {
-  final List<Task> favoriteTasks;
-  final List<Task> removedTasks;
   final List<Task> pendingTasks;
   final List<Task> completedTasks;
+  final List<Task> favoriteTasks;
+  final List<Task> removedTasks;
+
   const TasksState({
-    this.favoriteTasks = const <Task>[],
-    this.removedTasks = const <Task>[],
     this.pendingTasks = const <Task>[],
+    this.removedTasks = const <Task>[],
+    this.favoriteTasks = const <Task>[],
     this.completedTasks = const <Task>[],
   });
 
   @override
   List<Object> get props =>
-      [favoriteTasks, removedTasks, pendingTasks, completedTasks];
+      [pendingTasks, removedTasks, favoriteTasks, completedTasks];
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'favoriteTasks': favoriteTasks.map((x) => x.toMap()).toList(),
-      'removedTasks': removedTasks.map((x) => x.toMap()).toList(),
+    return {
       'pendingTasks': pendingTasks.map((x) => x.toMap()).toList(),
+      'removedTasks': removedTasks.map((x) => x.toMap()).toList(),
+      'favoriteTasks': favoriteTasks.map((x) => x.toMap()).toList(),
       'completedTasks': completedTasks.map((x) => x.toMap()).toList(),
     };
   }
 
   factory TasksState.fromMap(Map<String, dynamic> map) {
     return TasksState(
-      favoriteTasks: List<Task>.from(
-        (map['favoriteTasks'] as List<int>).map<Task>(
-          (x) => Task.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-      removedTasks: List<Task>.from(
-        (map['removedTasks'] as List<int>).map<Task>(
-          (x) => Task.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-      pendingTasks: List<Task>.from(
-        (map['pendingTasks'] as List<int>).map<Task>(
-          (x) => Task.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-      completedTasks: List<Task>.from(
-        (map['completedTasks'] as List<int>).map<Task>(
-          (x) => Task.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      pendingTasks:
+          List<Task>.from(map['pendingTasks']?.map((x) => Task.fromMap(x))),
+      removedTasks:
+          List<Task>.from(map['removedTasks']?.map((x) => Task.fromMap(x))),
+      favoriteTasks:
+          List<Task>.from(map['favoriteTasks']?.map((x) => Task.fromMap(x))),
+      completedTasks:
+          List<Task>.from(map['completedTasks']?.map((x) => Task.fromMap(x))),
     );
   }
 }
